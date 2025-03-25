@@ -1,6 +1,6 @@
 # Cloudflare Tunnel Helm Chart
 
-This Helm chart creates a `cloudflared` deployment, which sets up a reverse tunnel for an environment.
+This Helm chart creates a `cloudflared` deployment, which sets up a reverse tunnel for an environment. This is a direct copy of: https://github.com/cloudflare/helm-charts/tree/main/charts/cloudflare-tunnel but we manage versions a bit better.
 
 ## Prerequisites
 

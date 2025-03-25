@@ -1,6 +1,6 @@
 # Cloudflare Tunnel Remote Helm Chart
 
-This Helm chart deploys a remotely managed tunnel that has already been provisioned in Cloudflare.
+This Helm chart deploys a remotely managed tunnel that has already been provisioned in Cloudflare. This is a direct copy of: https://github.com/cloudflare/helm-charts/tree/main/charts/cloudflare-tunnel-remote but we manage versions a bit better.
 
 ## Prerequisites
 

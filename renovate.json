@@ -1,46 +1,42 @@
 {
-    "extends": [
-      "config:base"
-    ],
-    "packageRules": [
-      {
-        "matchDatasources": ["docker"],
-        "matchPackageNames": ["cloudflare/cloudflared"],
-        "extractVersion": "^([0-9]+\\.[0-9]+\\.[0-9]+)$",
-        "fileMatch": [
-          "^charts/cloudflare-tunnel/Chart.yaml$",
-          "^charts/cloudflare-tunnel-remote/Chart.yaml$"
-        ],
-        "versioning": "semver",
-        "updateTypes": ["major", "minor", "patch"],
-        "automerge": true
-      }
-    ],
-    "regexManagers": [
-      {
-        "fileMatch": [
-          "^charts/cloudflare-tunnel/Chart.yaml$",
-          "^charts/cloudflare-tunnel-remote/Chart.yaml$"
-        ],
-        "matchStrings": [
-          "appVersion: \"(?<currentValue>[^\"]+)\""
-        ],
-        "datasourceTemplate": "docker",
-        "depNameTemplate": "cloudflare/cloudflared",
-        "versioningTemplate": "semver"
-      },
-      {
-        "fileMatch": [
-          "^charts/cloudflare-tunnel/Chart.yaml$",
-          "^charts/cloudflare-tunnel-remote/Chart.yaml$"
-        ],
-        "matchStrings": [
-          "version: \"(?<currentValue>[^\"]+)\""
-        ],
-        "datasourceTemplate": "docker",
-        "depNameTemplate": "cloudflare/cloudflared",
-        "versioningTemplate": "semver",
-        "versioning": "semver:minor"
-      }
-    ]
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["cloudflare/cloudflared"],
+      "fileMatch": [
+        "^charts/cloudflare-tunnel/Chart.yaml$",
+        "^charts/cloudflare-tunnel-remote/Chart.yaml$"
+      ],
+      "automerge": true
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^charts/cloudflare-tunnel/Chart.yaml$",
+        "^charts/cloudflare-tunnel-remote/Chart.yaml$"
+      ],
+      "matchStrings": [
+        "appVersion: \"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "cloudflare/cloudflared",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": [
+        "^charts/cloudflare-tunnel/Chart.yaml$",
+        "^charts/cloudflare-tunnel-remote/Chart.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "cloudflare/cloudflared",
+      "versioningTemplate": "semver"
+    }
+  ]
 }
