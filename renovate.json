@@ -25,18 +25,6 @@
       "datasourceTemplate": "docker",
       "depNameTemplate": "cloudflare/cloudflared",
       "versioningTemplate": "semver"
-    },
-    {
-      "fileMatch": [
-        "^charts/cloudflare-tunnel/Chart.yaml$",
-        "^charts/cloudflare-tunnel-remote/Chart.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "cloudflare/cloudflared",
-      "versioningTemplate": "semver"
     }
   ]
 }
