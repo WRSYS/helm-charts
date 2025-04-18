@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-meshcentral
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-meshcentral
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-meshcentral
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-meshcentral
+    spec:
+      containers:
+      - name: meshcentral
+        image: "{{ .Values.meshcentral.image.repository }}:{{ .Values.meshcentral.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: meshcentral-config
+          mountPath: /opt/meshcentral/meshcentral-data/config.json
+          subPath: config.json
+        - name: meshcentral-data
+          subPath: meshcentral-data
+          mountPath: /opt/meshcentral/meshcentral-data
+        - name: meshcentral-user-files
+          subPath: meshcentral-user-files
+          mountPath: /opt/meshcentral/meshcentral-files
+        - name: meshcentral-backup
+          subPath: meshcentral-backup
+          mountPath: /opt/meshcentral/meshcentral-backups
+        - name: meshcentral-web
+          subPath: meshcentral-web
+          mountPath: /opt/meshcentral/meshcentral-web
+      volumes:
+      - name: meshcentral-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-meshcentral-data-pvc
+      - name: config
+        configMap:
+          name: {{ .Release.Name }}-meshcentral-config
