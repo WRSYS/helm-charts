@@ -5,54 +5,54 @@ on:
     branches:
       - main
     paths:
-      - 'charts/**/Chart.yaml'
+      - "charts/**/Chart.ya?ml"
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set Up Helm
-      uses: azure/setup-helm@v3
-      with:
-        version: v3.14.0
+      - name: Set Up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
 
-    - name: Package Updated Helm Charts
-      run: |
-        mkdir -p packaged
-        for chart in charts/*; do
-          if [ -d "$chart" ]; then
-            version=$(grep '^version:' $chart/Chart.yaml | awk '{print $2}')
-            chart_name=$(basename $chart)
-            # Check if this version already exists
-            if ! curl -s https://wrsys.github.io/helm-charts/index.yaml | grep -q "${chart_name}-${version}.tgz"; then
-              echo "Packaging $chart_name version $version"
-              helm package $chart --destination packaged
-            else
-              echo "$chart_name version $version already exists. Skipping..."
+      - name: Package Updated Helm Charts
+        run: |
+          mkdir -p packaged
+          for chart in charts/*; do
+            if [ -d "$chart" ]; then
+              version=$(grep '^version:' $chart/Chart.ya?ml | awk '{print $2}')
+              chart_name=$(basename $chart)
+              # Check if this version already exists
+              if ! curl -s https://wrsys.github.io/helm-charts/index.yaml | grep -q "${chart_name}-${version}.tgz"; then
+                echo "Packaging $chart_name version $version"
+                helm package $chart --destination packaged
+              else
+                echo "$chart_name version $version already exists. Skipping..."
+              fi
             fi
-          fi
-        done
+          done
 
-    - name: Checkout gh-pages
-      uses: actions/checkout@v3
-      with:
-        ref: gh-pages
-        path: gh-pages
+      - name: Checkout gh-pages
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: gh-pages
 
-    - name: Update Helm Index
-      run: |
-        cd gh-pages
-        cp ../packaged/*.tgz .
-        helm repo index . --url https://wrsys.github.io/helm-charts/ --merge index.yaml || helm repo index .
+      - name: Update Helm Index
+        run: |
+          cd gh-pages
+          cp ../packaged/*.tgz .
+          helm repo index . --url https://wrsys.github.io/helm-charts/ --merge index.yaml || helm repo index .
 
-    - name: Commit and Push to gh-pages
-      run: |
-        cd gh-pages
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Update Helm chart(s)" || echo "No changes to commit"
-        git push
+      - name: Commit and Push to gh-pages
+        run: |
+          cd gh-pages
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update Helm chart(s)" || echo "No changes to commit"
+          git push
