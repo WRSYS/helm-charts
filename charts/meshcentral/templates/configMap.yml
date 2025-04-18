@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-meshcentral-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |-
+    {{ .Files.Get .Values.config.configJsonPath | indent 4 }}
