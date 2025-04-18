@@ -1,28 +1,47 @@
-namespaceOverride: ""
+meshcentral:
+  image:
+    repository: ghcr.io/ylianst/meshcentral
+    tag: ""
+    pullPolicy: IfNotPresent
 
-commonLabels: {}
-commonAnnotations: {}
+  service:
+    type: ClusterIP
+    port: 443
 
-replicaCount: 1
+  config:
+    preconfiguredJson: {}
 
-image:
-  repository: ghcr.io/ylianst/meshcentral
-  tag: 1.1.43
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 443
+    settings:
+      plugins: {}
+      cert: ""
+      WANonly: true
+      port: 443
+      redirPort: 80
+      agentPong: 300
+      tlsOffload: true
+      selfUpdate: false
+      allowFraming: true
+      trustedProxy: ""
+      webRTC: false
+    domains:
+      "":
+        allowedOrigin:
+          - ""
+        minify: true
+        newAccounts: true
+        localSessionRecording: false
+        userNameIsEmail: true
+        certUrl: ""
 
 ingress:
   enabled: false
-  #ingressClassName: nginx
+  ingressClassName: ""
   annotations: {}
   host:
-  - host: chart-example.local
-    paths:
-    - path: /
-      pathType: ImplementationSpecific
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls: []
   pathType: Prefix
 
@@ -32,6 +51,3 @@ persistence:
   accessModes:
     - ReadWriteMany
   size: 10Gi
-
-config:
-  configJsonPath: "config.json"

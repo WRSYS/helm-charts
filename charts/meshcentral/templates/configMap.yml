@@ -5,4 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   config.json: |-
-    {{ .Files.Get .Values.config.configJsonPath | indent 4 }}
+    {{- $preconfigured := .Values.meshcentral.config.preconfiguredJson | default dict }}
+    {{- $settings := .Values.meshcentral.config.settings | toJson | fromJson }}
+    {{- $merged := merge $preconfigured $settings }}
+    {{ $merged | toJson | nindent 4 }}
