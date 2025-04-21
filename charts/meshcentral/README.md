@@ -19,9 +19,8 @@ This Helm chart is used to deploy [MeshCentral](https://meshcentral.com/), a pow
 
 To install the chart with the release name `my-meshcentral`:
 
-```bash
-helm repo add my-repo https://example.com/charts
-helm install my-meshcentral my-repo/meshcentral
+```sh
+helm install my-release wrsys/meshcentral
 ```
 
 ## Configuration
