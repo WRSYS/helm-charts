@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-meshcentral-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |-
+    {{- $preconfigured := .Values.meshcentral.config.preconfiguredJson | default dict }}
+    {{- $settings := .Values.meshcentral.config.settings | toJson | fromJson }}
+
+    {{- /* Add database configuration */ -}}
+    {{- $database := dict }}
+    {{- if .Values.meshcentral.database.mariaDB.enabled }}
+    {{- $mariaDB := .Values.meshcentral.database.mariaDB }}
+    {{- if .Values.meshcentral.database.mariaDB.secret }}
+    {{- $mariaDB = merge $mariaDB (dict
+        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data (index .Values.meshcentral.database.mariaDB.secretKeys "host") | b64dec | default $mariaDB.host)
+        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data (index .Values.meshcentral.database.mariaDB.secretKeys "user") | b64dec | default $mariaDB.user)
+        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data (index .Values.meshcentral.database.mariaDB.secretKeys "password") | b64dec | default $mariaDB.password)
+        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data (index .Values.meshcentral.database.mariaDB.secretKeys "database") | b64dec | default $mariaDB.database)
+    ) }}
+    {{- end }}
+    {{- $database = merge $database (dict "mariaDB" $mariaDB) }}
+    {{- end }}
+
+    {{- if .Values.meshcentral.database.mySQL.enabled }}
+    {{- $mySQL := .Values.meshcentral.database.mySQL }}
+    {{- if .Values.meshcentral.database.mySQL.secret }}
+    {{- $mySQL = merge $mySQL (dict
+        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data (index .Values.meshcentral.database.mySQL.secretKeys "host") | b64dec | default $mySQL.host)
+        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data (index .Values.meshcentral.database.mySQL.secretKeys "user") | b64dec | default $mySQL.user)
+        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data (index .Values.meshcentral.database.mySQL.secretKeys "password") | b64dec | default $mySQL.password)
+        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data (index .Values.meshcentral.database.mySQL.secretKeys "database") | b64dec | default $mySQL.database)
+    ) }}
+    {{- end }}
+    {{- $database = merge $database (dict "mySQL" $mySQL) }}
+    {{- end }}
+
+    {{- if .Values.meshcentral.database.postgres.enabled }}
+    {{- $postgres := .Values.meshcentral.database.postgres }}
+    {{- if .Values.meshcentral.database.postgres.secret }}
+    {{- $postgres = merge $postgres (dict
+        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data (index .Values.meshcentral.database.postgres.secretKeys "host") | b64dec | default $postgres.host)
+        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data (index .Values.meshcentral.database.postgres.secretKeys "user") | b64dec | default $postgres.user)
+        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data (index .Values.meshcentral.database.postgres.secretKeys "password") | b64dec | default $postgres.password)
+        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data (index .Values.meshcentral.database.postgres.secretKeys "database") | b64dec | default $postgres.database)
+    ) }}
+    {{- end }}
+    {{- $database = merge $database (dict "postgres" $postgres) }}
+    {{- end }}
+
+    {{- /* Merge settings and database configuration */ -}}
+    {{- $merged := merge $preconfigured $settings $database }}
+    {{ $merged | toJson | nindent 4 }}

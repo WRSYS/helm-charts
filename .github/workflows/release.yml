@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "charts/**/Chart.ya?ml"
+      - "charts/**/Chart.yaml"
 
 jobs:
   release:
@@ -24,7 +24,7 @@ jobs:
           mkdir -p packaged
           for chart in charts/*; do
             if [ -d "$chart" ]; then
-              version=$(grep '^version:' $chart/Chart.ya?ml | awk '{print $2}')
+              version=$(grep '^version:' $chart/Chart.yaml | awk '{print $2}')
               chart_name=$(basename $chart)
               # Check if this version already exists
               if ! curl -s https://wrsys.github.io/helm-charts/index.yaml | grep -q "${chart_name}-${version}.tgz"; then
