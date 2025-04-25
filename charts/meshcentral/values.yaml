@@ -106,6 +106,10 @@ meshcentral:
       enabled: false
       sponsor: false
 
+service:
+  type: ClusterIP
+  port: 443
+
 ingress:
   enabled: false
   ingressClassName: ""
