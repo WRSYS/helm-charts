@@ -20,25 +20,29 @@ spec:
         ports:
         - containerPort: 443
         volumeMounts:
-        - name: meshcentral-config
-          mountPath: /opt/meshcentral/meshcentral-data/config.json
-          subPath: config.json
+        {{- if .Values.persistence.enabled }}
         - name: meshcentral-data
           subPath: meshcentral-data
           mountPath: /opt/meshcentral/meshcentral-data
-        - name: meshcentral-user-files
+        - name: meshcentral-data
           subPath: meshcentral-user-files
           mountPath: /opt/meshcentral/meshcentral-files
-        - name: meshcentral-backup
+        - name: meshcentral-data
           subPath: meshcentral-backup
           mountPath: /opt/meshcentral/meshcentral-backups
-        - name: meshcentral-web
+        - name: meshcentral-data
           subPath: meshcentral-web
           mountPath: /opt/meshcentral/meshcentral-web
+        {{- end }}
+        - name: meshcentral-config
+          mountPath: /opt/meshcentral/meshcentral-data/config.json
+          subPath: config.json
       volumes:
+      {{- if .Values.persistence.enabled }}
       - name: meshcentral-data
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-meshcentral-data-pvc
+      {{- end }}
       - name: config
         configMap:
           name: {{ .Release.Name }}-meshcentral-config
