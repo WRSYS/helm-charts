@@ -4,9 +4,7 @@ meshcentral:
     tag: ""
     pullPolicy: IfNotPresent
 
-  service:
-    type: ClusterIP
-    port: 443
+  databaseType: none # Options: none, mariadb, mysql, postgres, sqlite3, acebase
 
   config:
     preconfiguredJson: {}
@@ -23,8 +21,9 @@ meshcentral:
       allowFraming: true
       trustedProxy: ""
       webRTC: false
+
     domains:
-      "":
+      "": # Default domain configuration
         allowedOrigin:
           - ""
         minify: true
@@ -32,44 +31,23 @@ meshcentral:
         localSessionRecording: false
         userNameIsEmail: true
         certUrl: ""
-  database:
-    mongoDb: null
-    mongoDbName: null
-    mongoDbChangeStream: false
-    mongoDbBulkOperations: false
 
+  database:
     mariaDB:
-      enabled: false
-      secret: "mariadb-credentials" # Name of the secret
+      secret: "mariadb-credentials"
       secretKeys:
-        host: "host" # Key name for the host in the secret
-        user: "user" # Key name for the user in the secret
-        password: "password" # Key name for the password in the secret
-        database: "database" # Key name for the database name in the secret
+        host: "host"
+        user: "user"
+        password: "password"
+        database: "database"
       host: ""
       user: ""
       port: 3306
       password: ""
       connectionLimit: 10
       database: "meshcentral"
-      awsrds: false
-      ssl:
-        caCertPath: ""
-        clientCertPath: ""
-        clientKeyPath: ""
-        dontCheckServerIdentity: false
-
-    sqlite3:
-      enabled: false
-      name: "meshcentral"
-      journalMode: "delete"
-      journalSize: 4096000
-      autoVacuum: "incremental"
-      incrementalVacuum: 100
-      startupVacuum: false
 
     mySQL:
-      enabled: false
       secret: "mysql-credentials"
       secretKeys:
         host: "host"
@@ -81,15 +59,8 @@ meshcentral:
       user: ""
       password: ""
       database: "meshcentral"
-      awsrds: false
-      ssl:
-        caCertPath: ""
-        clientCertPath: ""
-        clientKeyPath: ""
-        dontCheckServerIdentity: false
 
     postgres:
-      enabled: false
       secret: "postgres-credentials"
       secretKeys:
         host: "host"
@@ -97,14 +68,18 @@ meshcentral:
         password: "password"
         database: "database"
       host: ""
-      user: ""
       port: 5432
+      user: ""
       password: ""
       database: "meshcentral"
 
-    acebase:
-      enabled: false
-      sponsor: false
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
 
 service:
   type: ClusterIP
@@ -123,8 +98,9 @@ ingress:
   pathType: Prefix
 
 persistence:
-  enabled: false
-  storageClass: ""
+  enabled: true # Enable persistence
+  existingClaim: "" # (Optional) Use an existing PersistentVolumeClaim instead of creating one
+  storageClass: "" # Storage Class to use for dynamic volume
   accessModes:
-    - ReadWriteMany
-  size: 10Gi
+    - ReadWriteOnce
+  size: 10Gi # Volume size

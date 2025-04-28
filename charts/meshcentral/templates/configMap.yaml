@@ -7,48 +7,53 @@ data:
   config.json: |-
     {{- $preconfigured := .Values.meshcentral.config.preconfiguredJson | default dict }}
     {{- $settings := .Values.meshcentral.config.settings | toJson | fromJson }}
-
-    {{- /* Add database configuration */ -}}
     {{- $database := dict }}
+
+    {{- /* Define a helper to extract database config from a Secret */}}
+    {{- define "getDbConfigFromSecret" }}
+      {{- $db := index . 0 }}
+      {{- $secretName := index . 1 }}
+      {{- $secretKeys := index . 2 }}
+      {{- $namespace := index . 3 }}
+      {{- $lookupSecret := (lookup "v1" "Secret" $namespace $secretName) | default dict }}
+      {{- if $lookupSecret.data }}
+        {{- $db = merge $db (dict
+          "host"     ((get $lookupSecret.data $secretKeys.host) | b64dec | default $db.host),
+          "user"     ((get $lookupSecret.data $secretKeys.user) | b64dec | default $db.user),
+          "password" ((get $lookupSecret.data $secretKeys.password) | b64dec | default $db.password),
+          "database" ((get $lookupSecret.data $secretKeys.database) | b64dec | default $db.database)
+        ) }}
+      {{- end }}
+      {{- return $db }}
+    {{- end }}
+
+    {{- /* Process MariaDB */}}
     {{- if .Values.meshcentral.database.mariaDB.enabled }}
-    {{- $mariaDB := .Values.meshcentral.database.mariaDB }}
-    {{- if .Values.meshcentral.database.mariaDB.secret }}
-    {{- $mariaDB = merge $mariaDB (dict
-        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data | index .Values.meshcentral.database.mariaDB.secretKeys.host | b64dec | default $mariaDB.host),
-        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data | index .Values.meshcentral.database.mariaDB.secretKeys.user | b64dec | default $mariaDB.user),
-        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data | index .Values.meshcentral.database.mariaDB.secretKeys.password | b64dec | default $mariaDB.password),
-        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mariaDB.secret | default dict | .data | index .Values.meshcentral.database.mariaDB.secretKeys.database | b64dec | default $mariaDB.database)
-    ) }}
-    {{- end }}
-    {{- $database = merge $database (dict "mariaDB" $mariaDB) }}
+      {{- $mariaDB := .Values.meshcentral.database.mariaDB }}
+      {{- if $mariaDB.secret }}
+        {{- $mariaDB = include "getDbConfigFromSecret" (list $mariaDB $mariaDB.secret $mariaDB.secretKeys .Release.Namespace) | fromYaml }}
+      {{- end }}
+      {{- $database = merge $database (dict "mariaDB" $mariaDB) }}
     {{- end }}
 
+    {{- /* Process MySQL */}}
     {{- if .Values.meshcentral.database.mySQL.enabled }}
-    {{- $mySQL := .Values.meshcentral.database.mySQL }}
-    {{- if .Values.meshcentral.database.mySQL.secret }}
-    {{- $mySQL = merge $mySQL (dict
-        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data | index .Values.meshcentral.database.mySQL.secretKeys.host | b64dec | default $mySQL.host),
-        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data | index .Values.meshcentral.database.mySQL.secretKeys.user | b64dec | default $mySQL.user),
-        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data | index .Values.meshcentral.database.mySQL.secretKeys.password | b64dec | default $mySQL.password),
-        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.mySQL.secret | default dict | .data | index .Values.meshcentral.database.mySQL.secretKeys.database | b64dec | default $mySQL.database)
-    ) }}
-    {{- end }}
-    {{- $database = merge $database (dict "mySQL" $mySQL) }}
+      {{- $mySQL := .Values.meshcentral.database.mySQL }}
+      {{- if $mySQL.secret }}
+        {{- $mySQL = include "getDbConfigFromSecret" (list $mySQL $mySQL.secret $mySQL.secretKeys .Release.Namespace) | fromYaml }}
+      {{- end }}
+      {{- $database = merge $database (dict "mySQL" $mySQL) }}
     {{- end }}
 
+    {{- /* Process Postgres */}}
     {{- if .Values.meshcentral.database.postgres.enabled }}
-    {{- $postgres := .Values.meshcentral.database.postgres }}
-    {{- if .Values.meshcentral.database.postgres.secret }}
-    {{- $postgres = merge $postgres (dict
-        "host" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data | index .Values.meshcentral.database.postgres.secretKeys.host | b64dec | default $postgres.host),
-        "user" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data | index .Values.meshcentral.database.postgres.secretKeys.user | b64dec | default $postgres.user),
-        "password" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data | index .Values.meshcentral.database.postgres.secretKeys.password | b64dec | default $postgres.password),
-        "database" (lookup "v1" "Secret" .Release.Namespace .Values.meshcentral.database.postgres.secret | default dict | .data | index .Values.meshcentral.database.postgres.secretKeys.database | b64dec | default $postgres.database)
-    ) }}
-    {{- end }}
-    {{- $database = merge $database (dict "postgres" $postgres) }}
+      {{- $postgres := .Values.meshcentral.database.postgres }}
+      {{- if $postgres.secret }}
+        {{- $postgres = include "getDbConfigFromSecret" (list $postgres $postgres.secret $postgres.secretKeys .Release.Namespace) | fromYaml }}
+      {{- end }}
+      {{- $database = merge $database (dict "postgres" $postgres) }}
     {{- end }}
 
-    {{- /* Merge settings and database configuration */ -}}
+    {{- /* Merge everything */}}
     {{- $merged := merge $preconfigured $settings $database }}
     {{ $merged | toJson | nindent 4 }}

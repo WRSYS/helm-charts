@@ -1,48 +1,81 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-meshcentral
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "meshcentral.fullname" . }}
   labels:
-    app: {{ .Release.Name }}-meshcentral
+    app.kubernetes.io/name: meshcentral
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-meshcentral
+      app.kubernetes.io/name: meshcentral
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-meshcentral
+        app.kubernetes.io/name: meshcentral
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-      - name: meshcentral
-        image: "{{ .Values.meshcentral.image.repository }}:{{ .Values.meshcentral.image.tag | default .Chart.AppVersion }}"
-        ports:
-        - containerPort: 443
-        volumeMounts:
+        - name: meshcentral
+          image: "{{ .Values.meshcentral.image.repository }}:{{ .Values.meshcentral.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.meshcentral.image.pullPolicy }}
+          ports:
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}  # Adjust indentation
+          livenessProbe:
+            httpGet:
+              path: /meshcentral.ashx
+              port: 443
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /meshcentral.ashx
+              port: 443
+              scheme: HTTPS
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 3
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            runAsNonRoot: true
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: meshcentral-data
+              subPath: meshcentral-data
+              mountPath: /opt/meshcentral/meshcentral-data
+            - name: meshcentral-data
+              subPath: meshcentral-user-files
+              mountPath: /opt/meshcentral/meshcentral-files
+            - name: meshcentral-data
+              subPath: meshcentral-backup
+              mountPath: /opt/meshcentral/meshcentral-backups
+            - name: meshcentral-data
+              subPath: meshcentral-web
+              mountPath: /opt/meshcentral/meshcentral-web
+            {{- end }}
+            - name: meshcentral-config
+              mountPath: /opt/meshcentral/meshcentral-data/config.json
+              subPath: config.json
+      volumes:
         {{- if .Values.persistence.enabled }}
         - name: meshcentral-data
-          subPath: meshcentral-data
-          mountPath: /opt/meshcentral/meshcentral-data
-        - name: meshcentral-data
-          subPath: meshcentral-user-files
-          mountPath: /opt/meshcentral/meshcentral-files
-        - name: meshcentral-data
-          subPath: meshcentral-backup
-          mountPath: /opt/meshcentral/meshcentral-backups
-        - name: meshcentral-data
-          subPath: meshcentral-web
-          mountPath: /opt/meshcentral/meshcentral-web
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ else }}{{ .Release.Name }}-meshcentral-data-pvc{{ end }}
         {{- end }}
         - name: meshcentral-config
-          mountPath: /opt/meshcentral/meshcentral-data/config.json
-          subPath: config.json
-      volumes:
-      {{- if .Values.persistence.enabled }}
-      - name: meshcentral-data
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-meshcentral-data-pvc
-      {{- end }}
-      - name: config
-        configMap:
-          name: {{ .Release.Name }}-meshcentral-config
+          configMap:
+            name: {{ include "meshcentral.fullname" . }}-config

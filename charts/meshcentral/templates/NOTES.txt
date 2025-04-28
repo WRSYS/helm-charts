@@ -1,0 +1,10 @@
+MeshCentral has been deployed.
+
+Access it via:
+
+{{- if .Values.ingress.enabled }}
+  https://{{ (index .Values.ingress.host 0).host }}
+{{- else }}
+  Service: {{ include "meshcentral.fullname" . }}
+  Port: {{ .Values.service.port }}
+{{- end }}
