@@ -89,7 +89,7 @@ ingress:
   enabled: false
   ingressClassName: ""
   annotations: {}
-  host:
+  hosts:
     - host: chart-example.local
       paths:
         - path: /

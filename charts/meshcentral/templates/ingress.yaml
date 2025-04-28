@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-  {{- range .Values.ingress.host }}
+    {{- range .Values.ingress.hosts }}
     - host: {{ .host }}
       http:
         paths:
@@ -17,11 +17,11 @@ spec:
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ include "meshcentral.fullname" $. }}
+                name: {{ include "meshcentral.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
-  {{- end }}
+    {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
     {{- toYaml .Values.ingress.tls | nindent 4 }}
