@@ -6,58 +6,58 @@ metadata:
 data:
   config.json: |-
     {
-      "settings":
-        {{- $settings := .Values.meshcentral.config.settings | default dict }}
-        {{- $domains := .Values.meshcentral.config.domains | default dict }}
-        {{- $db := dict }}
+      {{- $settings := .Values.meshcentral.config.settings | default dict }}
+      {{- $domains := .Values.meshcentral.config.domains | default dict }}
+      {{- $db := dict }}
 
-        {{- /* Merge MariaDB */}}
-        {{- if .Values.meshcentral.database.mariadb.enabled }}
-        {{- $m := .Values.meshcentral.database.mariadb }}
-        {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
-        {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
-        {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
-        {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
-        {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
-        {{- $_ := set $db "mariaDB" $m }}
-        {{- end }}
+      {{- /* Merge MariaDB */}}
+      {{- if .Values.meshcentral.database.mariadb.enabled }}
+      {{- $m := .Values.meshcentral.database.mariadb }}
+      {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
+      {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
+      {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
+      {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
+      {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
+      {{- $_ := set $db "mariaDB" $m }}
+      {{- end }}
 
-        {{- /* MySQL */}}
-        {{- if .Values.meshcentral.database.mysql.enabled }}
-        {{- $m := .Values.meshcentral.database.mysql }}
-        {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
-        {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
-        {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
-        {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
-        {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
-        {{- $_ := set $db "mySQL" $m }}
-        {{- end }}
+      {{- /* MySQL */}}
+      {{- if .Values.meshcentral.database.mysql.enabled }}
+      {{- $m := .Values.meshcentral.database.mysql }}
+      {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
+      {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
+      {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
+      {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
+      {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
+      {{- $_ := set $db "mySQL" $m }}
+      {{- end }}
 
-        {{- /* PostgreSQL */}}
-        {{- if .Values.meshcentral.database.postgres.enabled }}
-        {{- $m := .Values.meshcentral.database.postgres }}
-        {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
-        {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
-        {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
-        {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
-        {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
-        {{- $_ := set $db "postgres" $m }}
-        {{- end }}
+      {{- /* PostgreSQL */}}
+      {{- if .Values.meshcentral.database.postgres.enabled }}
+      {{- $m := .Values.meshcentral.database.postgres }}
+      {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
+      {{- $_ := set $m "host"     ((get $s.data $m.secretKeys.host)     | b64dec | default $m.host) }}
+      {{- $_ := set $m "user"     ((get $s.data $m.secretKeys.user)     | b64dec | default $m.user) }}
+      {{- $_ := set $m "password" ((get $s.data $m.secretKeys.password) | b64dec | default $m.password) }}
+      {{- $_ := set $m "database" ((get $s.data $m.secretKeys.database) | b64dec | default $m.database) }}
+      {{- $_ := set $db "postgres" $m }}
+      {{- end }}
 
-        {{- /* MongoDB */}}
-        {{- if .Values.meshcentral.database.mongodb.enabled }}
-        {{- $m := .Values.meshcentral.database.mongodb }}
-        {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
-        {{- $_ := set $m "url" ((get $s.data $m.secretKeys.url) | b64dec | default $m.url) }}
-        {{- $_ := set $db "mongoDB" $m }}
-        {{- end }}
+      {{- /* MongoDB */}}
+      {{- if .Values.meshcentral.database.mongodb.enabled }}
+      {{- $m := .Values.meshcentral.database.mongodb }}
+      {{- $s := (lookup "v1" "Secret" .Release.Namespace $m.secret) | default dict }}
+      {{- $_ := set $m "url" ((get $s.data $m.secretKeys.url) | b64dec | default $m.url) }}
+      {{- $_ := set $db "mongoDB" $m }}
+      {{- end }}
 
-        {{- /* SQLite */}}
-        {{- if .Values.meshcentral.database.sqlite.enabled }}
-        {{- $_ := set $db "sqlite3" (dict "filename" .Values.meshcentral.database.sqlite.filename) }}
-        {{- end }}
+      {{- /* SQLite */}}
+      {{- if .Values.meshcentral.database.sqlite.enabled }}
+      {{- $_ := set $db "sqlite3" (dict "filename" .Values.meshcentral.database.sqlite.filename) }}
+      {{- end }}
 
-        {{- /* Merge all */}}
-        {{- $merged := merge $settings $db $domains }}
-        {{ $merged | toJson | nindent 8 }}
+      {{- /* Final merge and output */}}
+      {{- $settingsMerged := merge $settings $db }}
+      "settings": {{ $settingsMerged | toJson }},
+      "domains": {{ $domains | toJson }}
     }
