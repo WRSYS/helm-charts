@@ -6,8 +6,9 @@ metadata:
 data:
   config.json: |-
     {
-      "settings": {
+      "settings":
         {{- $settings := .Values.meshcentral.config.settings | default dict }}
+        {{- $domains := .Values.meshcentral.config.domains | default dict }}
         {{- $db := dict }}
 
         {{- /* Merge MariaDB */}}
@@ -56,13 +57,7 @@ data:
         {{- $_ := set $db "sqlite3" (dict "filename" .Values.meshcentral.database.sqlite.filename) }}
         {{- end }}
 
-        {{- /* AceBase */}}
-        {{- if .Values.meshcentral.database.acebase.enabled }}
-        {{- $_ := set $db "acebase" (dict "filename" .Values.meshcentral.database.acebase.filename "settings" .Values.meshcentral.database.acebase.settings) }}
-        {{- end }}
-
         {{- /* Merge all */}}
-        {{- $merged := merge $settings $db }}
+        {{- $merged := merge $settings $db $domains }}
         {{ $merged | toJson | nindent 8 }}
-      }
     }

@@ -7,8 +7,6 @@ meshcentral:
   databaseType: none # Options: none, mariadb, mysql, postgres, sqlite3, acebase
 
   config:
-    preconfiguredJson: {}
-
     settings:
       plugins: {}
       cert: ""
@@ -85,11 +83,6 @@ meshcentral:
     sqlite:
       enabled: false
       filename: "meshcentral.db"
-
-    acebase:
-      enabled: false
-      filename: "meshcentral-acebase.db"
-      settings: {}
 
 resources:
   requests:

@@ -1,5 +1,5 @@
 apiVersion: v2
 name: meshcentral
 description: A Helm chart for deploying MeshCentral
-version: 0.2.8
+version: 0.2.9
 appVersion: "1.1.43"
