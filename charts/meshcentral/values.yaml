@@ -116,7 +116,7 @@ ingress:
   pathType: Prefix
 
 persistence:
-  enabled: true # Enable persistence
+  enabled: false # Enable persistence
   existingClaim: "" # (Optional) Use an existing PersistentVolumeClaim instead of creating one
   storageClass: "" # Storage Class to use for dynamic volume
   accessModes:

@@ -2,7 +2,7 @@
 Expand the full name
 */}}
 {{- define "meshcentral.fullname" -}}
-{{- printf "%s-%s" .Release.Name "meshcentral" | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
