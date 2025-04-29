@@ -33,45 +33,63 @@ meshcentral:
         certUrl: ""
 
   database:
-    mariaDB:
-      secret: "mariadb-credentials"
+    mariadb:
+      enabled: false
+      secret: mariadb-secret
       secretKeys:
-        host: "host"
-        user: "user"
-        password: "password"
-        database: "database"
+        host: host
+        user: user
+        password: password
+        database: database
       host: ""
       user: ""
-      port: 3306
       password: ""
-      connectionLimit: 10
       database: "meshcentral"
+      port: 3306
 
-    mySQL:
-      secret: "mysql-credentials"
+    mysql:
+      enabled: false
+      secret: mysql-secret
       secretKeys:
-        host: "host"
-        user: "user"
-        password: "password"
-        database: "database"
+        host: host
+        user: user
+        password: password
+        database: database
       host: ""
-      port: 3306
       user: ""
       password: ""
       database: "meshcentral"
+      port: 3306
 
     postgres:
-      secret: "postgres-credentials"
+      enabled: false
+      secret: postgres-secret
       secretKeys:
-        host: "host"
-        user: "user"
-        password: "password"
-        database: "database"
+        host: host
+        user: user
+        password: password
+        database: database
       host: ""
-      port: 5432
       user: ""
       password: ""
       database: "meshcentral"
+      port: 5432
+
+    mongodb:
+      enabled: false
+      secret: mongodb-secret
+      secretKeys:
+        url: url
+      url: ""
+
+    sqlite:
+      enabled: false
+      filename: "meshcentral.db"
+
+    acebase:
+      enabled: false
+      filename: "meshcentral-acebase.db"
+      settings: {}
 
 resources:
   requests:
