@@ -27,26 +27,6 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}  # Adjust indentation
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 443
-              scheme: HTTPS
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 3
-            successThreshold: 1
-            timeoutSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 443
-              scheme: HTTPS
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 3
-            successThreshold: 1
-            timeoutSeconds: 3
           volumeMounts:
             {{- if .Values.persistence.enabled }}
             - name: meshcentral-data
