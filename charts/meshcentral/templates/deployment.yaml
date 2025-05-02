@@ -29,7 +29,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}  # Adjust indentation
           livenessProbe:
             httpGet:
-              path: /meshcentral.ashx
+              path: /
               port: 443
               scheme: HTTPS
             initialDelaySeconds: 30
@@ -39,7 +39,7 @@ spec:
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: /meshcentral.ashx
+              path: /
               port: 443
               scheme: HTTPS
             initialDelaySeconds: 10
