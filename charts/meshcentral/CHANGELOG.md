@@ -1,3 +1,4 @@
+# Changelog
 ## [0.3.0]
 ### Added
 - Changelog for version documentation
