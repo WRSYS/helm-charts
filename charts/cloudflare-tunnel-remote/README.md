@@ -22,6 +22,7 @@ The following table lists the configurable parameters of the Cloudflare Tunnel R
 | Parameter                         | Description                                      | Default                        |
 | --------------------------------- | ------------------------------------------------ | ------------------------------ |
 | `cloudflare.tunnel_token`         | The token for the Cloudflare tunnel              | `""`                           |
+| `cloudflare.secretName`           | The secret name for the credentials              | `null`                         |
 | `image.repository`                | Image repository                                 | `cloudflare/cloudflared`       |
 | `image.pullPolicy`                | Image pull policy                                | `IfNotPresent`                 |
 | `image.tag`                       | Image tag                                        | `""`                           |
