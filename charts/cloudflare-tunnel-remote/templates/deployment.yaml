@@ -14,7 +14,7 @@ spec:
       creationTimestamp: null
       annotations:
         # These are here so the deployment rolls when the config or secret change.
-        checksum/secret: {{ .Values.cloudflare.tunnel_token | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -43,7 +43,7 @@ spec:
         - name: TUNNEL_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "cloudflare-tunnel-remote.fullname" . }}
+              name: {{ .Values.cloudflare.secretName | default (include "cloudflare-tunnel-remote.fullname" .) }}
               key: tunnelToken
         livenessProbe:
           httpGet:
