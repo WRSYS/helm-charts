@@ -1,31 +1,40 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["cloudflare/cloudflared"],
-      "fileMatch": [
-        "^charts/cloudflare-tunnel/Chart.ya?ml$",
-        "^charts/cloudflare-tunnel-remote/Chart.ya?ml$"
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "cloudflare/cloudflared"
+      ],
+      "managerFilePatterns": [
+        "/^charts/cloudflare-tunnel/Chart.ya?ml$/",
+        "/^charts/cloudflare-tunnel-remote/Chart.ya?ml$/"
       ],
       "automerge": true
     },
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/ylianst/meshcentral"],
-      "fileMatch": [
-        "^charts/meshcentral/Chart.ya?ml$"
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/ylianst/meshcentral"
+      ],
+      "managerFilePatterns": [
+        "/^charts/meshcentral/Chart.ya?ml$/"
       ],
       "automerge": true
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "^charts/cloudflare-tunnel/Chart.ya?ml$",
-        "^charts/cloudflare-tunnel-remote/Chart.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^charts/cloudflare-tunnel/Chart.ya?ml$/",
+        "/^charts/cloudflare-tunnel-remote/Chart.ya?ml$/"
       ],
       "matchStrings": [
         "appVersion: \"(?<currentValue>[^\"]+)\""
@@ -35,8 +44,9 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": [
-        "^charts/meshcentral/Chart.ya?ml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^charts/meshcentral/Chart.ya?ml$/"
       ],
       "matchStrings": [
         "appVersion: \"(?<currentValue>[^\"]+)\""
