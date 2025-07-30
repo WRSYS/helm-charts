@@ -3,7 +3,7 @@ entries:
   cloudflare-tunnel:
   - apiVersion: v2
     appVersion: 2025.7.0
-    created: "2025-07-14T14:57:47.268976588Z"
+    created: "2025-07-30T15:45:18.353731716Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: 05182ab83d83f9f01a03eec90ae3ced83a6b3d6f571c21c9e5dd9039f4a17580
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -14,7 +14,7 @@ entries:
     version: 0.7.0
   - apiVersion: v2
     appVersion: 2025.6.1
-    created: "2025-07-14T14:57:47.26863036Z"
+    created: "2025-07-30T15:45:18.353385659Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: 305a014bb21223dd3ff3d46cb1badf3dd4415c482944ede2ebdbcea7a91638bc
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -25,7 +25,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 2025.5.0
-    created: "2025-07-14T14:57:47.268266931Z"
+    created: "2025-07-30T15:45:18.353074898Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: 188d3e3a0800bc7519bebcba24d7fed53465677d2bc49a676a82f17ce82e368a
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -36,7 +36,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 2025.4.2
-    created: "2025-07-14T14:57:47.267928909Z"
+    created: "2025-07-30T15:45:18.352738128Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: e5fd2526ed5df7523cb762f7386407d0d2a16ff092da3a621778b3a9f0ad6c9a
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -47,7 +47,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 2025.4.0
-    created: "2025-07-14T14:57:47.267563125Z"
+    created: "2025-07-30T15:45:18.352387803Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: 14f8f12b157c149cf159fccc6c6fad6e0df732e822d20baec9c19ca3d9fee94e
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -58,7 +58,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 2025.2.1
-    created: "2025-07-14T14:57:47.267237767Z"
+    created: "2025-07-30T15:45:18.35206007Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: 69abf8165095c0acf661d8380ecb0b49d0d130c8ff83f8f6d4e79fb55fa42069
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -69,7 +69,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 2024.8.3
-    created: "2025-07-14T14:57:47.266894496Z"
+    created: "2025-07-30T15:45:18.351699135Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
     digest: ef1b8de6895ec7ecd87f2113a5173127401fe7d1d6a199e96bba12f8568fec6b
     icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
@@ -81,7 +81,7 @@ entries:
   cloudflare-tunnel-remote:
   - apiVersion: v2
     appVersion: 2025.7.0
-    created: "2025-07-14T14:57:47.271831828Z"
+    created: "2025-07-30T15:45:18.356760287Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: 0f34f24263c5293b38d0135142571c9ff4470774fe84221e575b9fd438a4cefe
@@ -93,7 +93,7 @@ entries:
     version: 0.7.0
   - apiVersion: v2
     appVersion: 2025.6.1
-    created: "2025-07-14T14:57:47.271529112Z"
+    created: "2025-07-30T15:45:18.356480433Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: cf8a9dac14856e03da938d6fb1d0563aedfab7da6625fb76564123609ab4e5c8
@@ -105,7 +105,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 2025.5.0
-    created: "2025-07-14T14:57:47.271253898Z"
+    created: "2025-07-30T15:45:18.356213194Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: c0d0c05d128ad9c2c1f322fcf306aba37868b70a075da6639a61774f43e8e303
@@ -117,7 +117,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 2025.4.2
-    created: "2025-07-14T14:57:47.270778987Z"
+    created: "2025-07-30T15:45:18.35594352Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: ddf7823521fcb4a7b59d97833f6701f232446a1c69632948feb0edefa01f6527
@@ -129,7 +129,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: 2025.4.2
-    created: "2025-07-14T14:57:47.270040556Z"
+    created: "2025-07-30T15:45:18.355667604Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: 01eb22e86f9a5d82a301e656495cc66937156b181efe7ce019869385637dd034
@@ -141,7 +141,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 2025.4.0
-    created: "2025-07-14T14:57:47.269791421Z"
+    created: "2025-07-30T15:45:18.355300077Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: e20472a4c426040fcd483bbc0a57e353c195485f061225da71258748447b401c
@@ -153,7 +153,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 2025.2.1
-    created: "2025-07-14T14:57:47.269512509Z"
+    created: "2025-07-30T15:45:18.354276174Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: 15f22d522a0cb7ece6e2def8d71e65c6fdc2b7daabbbfb2287da642d5b4d6545
@@ -165,7 +165,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 2024.8.3
-    created: "2025-07-14T14:57:47.269232406Z"
+    created: "2025-07-30T15:45:18.354013933Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
     digest: 8a01c826d53450ea607ab054830bb8e7e98f212fc7ec25ca7f5056cc3075623c
@@ -177,8 +177,17 @@ entries:
     version: 0.1.0
   meshcentral:
   - apiVersion: v2
+    appVersion: 1.1.48
+    created: "2025-07-30T15:45:18.35948406Z"
+    description: A Helm chart for deploying MeshCentral
+    digest: c9af7d6bc8e6330bd37e5e23b537afbad87371e6ed75b781ae4f8b64df49eb18
+    name: meshcentral
+    urls:
+    - https://wrsys.github.io/helm-charts/meshcentral-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
     appVersion: 1.1.47
-    created: "2025-07-14T14:57:47.274023264Z"
+    created: "2025-07-30T15:45:18.359070306Z"
     description: A Helm chart for deploying MeshCentral
     digest: 6f3d4cb3220618feefe9a4dfc9bfff4ea6117293431a57fa4db30925a229ce00
     name: meshcentral
@@ -187,7 +196,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 1.1.46
-    created: "2025-07-14T14:57:47.273574435Z"
+    created: "2025-07-30T15:45:18.358630293Z"
     description: A Helm chart for deploying MeshCentral
     digest: a6974e4ba9c67c4184715cf5c683594f9f05c326d29fe7169bc338c9e328d8f1
     name: meshcentral
@@ -196,7 +205,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 1.1.45
-    created: "2025-07-14T14:57:47.27315436Z"
+    created: "2025-07-30T15:45:18.358074855Z"
     description: A Helm chart for deploying MeshCentral
     digest: 93ce4fbb615c42fdb0d15624385f39807828262110919fec1375b0864fa08f36
     name: meshcentral
@@ -205,7 +214,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 1.1.44
-    created: "2025-07-14T14:57:47.272710881Z"
+    created: "2025-07-30T15:45:18.357640072Z"
     description: A Helm chart for deploying MeshCentral
     digest: f1708cc3d707babe7faf0d64406633d9a91a6847111b852d4cfe988355ed355a
     name: meshcentral
@@ -214,11 +223,11 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 1.1.43
-    created: "2025-07-14T14:57:47.272264266Z"
+    created: "2025-07-30T15:45:18.357176565Z"
     description: A Helm chart for deploying MeshCentral
     digest: c8d4acdf0a87445e1e2976ae12ef63ed49c7fc2f7f74dc474b3ca7aeef4f8daa
     name: meshcentral
     urls:
     - https://wrsys.github.io/helm-charts/meshcentral-0.2.13.tgz
     version: 0.2.13
-generated: "2025-07-14T14:57:47.266367871Z"
+generated: "2025-07-30T15:45:18.351182028Z"
