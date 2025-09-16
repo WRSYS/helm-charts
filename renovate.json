@@ -27,6 +27,15 @@
         "/^charts/meshcentral/Chart.ya?ml$/"
       ],
       "automerge": true
+    },
+    {
+      "matchDepName": "meshcentral-chart-version",
+      "versioning": "semver",
+      "rangeStrategy": "bump",
+      "major": false,
+      "minor": true,
+      "patch": false,
+      "automerge": true
     }
   ],
   "customManagers": [
@@ -53,6 +62,18 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "ghcr.io/ylianst/meshcentral",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^charts/meshcentral/Chart.ya?ml$/"
+      ],
+      "matchStrings": [
+        "version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "regex",
+      "depNameTemplate": "meshcentral-chart-version",
       "versioningTemplate": "semver"
     }
   ]
