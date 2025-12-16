@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
   ],
@@ -10,7 +11,7 @@
       "matchPackageNames": [
         "cloudflare/cloudflared"
       ],
-      "managerFilePatterns": [
+      "matchFileNames": [
         "/^charts/cloudflare-tunnel/Chart.ya?ml$/",
         "/^charts/cloudflare-tunnel-remote/Chart.ya?ml$/"
       ],
@@ -23,58 +24,10 @@
       "matchPackageNames": [
         "ghcr.io/ylianst/meshcentral"
       ],
-      "managerFilePatterns": [
+      "matchFileNames": [
         "/^charts/meshcentral/Chart.ya?ml$/"
       ],
       "automerge": true
-    },
-    {
-      "matchDepName": "meshcentral-chart-version",
-      "versioning": "semver",
-      "rangeStrategy": "bump",
-      "major": false,
-      "minor": true,
-      "patch": false,
-      "automerge": true
-    }
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^charts/cloudflare-tunnel/Chart.ya?ml$/",
-        "/^charts/cloudflare-tunnel-remote/Chart.ya?ml$/"
-      ],
-      "matchStrings": [
-        "appVersion: \"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "cloudflare/cloudflared",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^charts/meshcentral/Chart.ya?ml$/"
-      ],
-      "matchStrings": [
-        "appVersion: \"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "ghcr.io/ylianst/meshcentral",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^charts/meshcentral/Chart.ya?ml$/"
-      ],
-      "matchStrings": [
-        "version: (?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasourceTemplate": "regex",
-      "depNameTemplate": "meshcentral-chart-version",
-      "versioningTemplate": "semver"
     }
   ]
 }
