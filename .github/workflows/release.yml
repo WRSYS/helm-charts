@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set Up Helm
         uses: azure/setup-helm@v4
@@ -37,7 +37,7 @@ jobs:
           done
 
       - name: Checkout gh-pages
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: gh-pages
           path: gh-pages
