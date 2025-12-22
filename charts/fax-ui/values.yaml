@@ -1,0 +1,98 @@
+# Default values for fax-ui.
+image:
+  repository: fax-ui
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: fax-ui.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources: {}
+#  limits:
+#    cpu: 200m
+#    memory: 256Mi
+#  requests:
+#    cpu: 100m
+#    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+replicaCount: 1
+
+# App configuration
+env:
+  hipaaMode: false
+  publicBaseURL: ""
+  uploadDir: "/app/uploads"
+  # If set, passed as flags; otherwise inputs remain visible in UI
+  connectionID: ""
+  fromNumber: ""
+  uploadsInMemory: true
+
+# Optionally load app envs from a Secret
+envSecret:
+  create: false
+  name: ""
+  # When create=true, keys will be populated from env.* values
+  keys:
+    HIPAA_MODE: ""
+    PUBLIC_BASE_URL: ""
+    FAX_CONNECTION_ID: ""
+    FAX_FROM_DEFAULT: ""
+    UPLOAD_IN_MEMORY: ""
+
+# Telnyx API key handling
+# Option 1: reference an existing secret name/key
+existingTelnyxSecret:
+  name: ""
+  key: TELNYX_API_KEY
+# Option 2: provide the apiKey value and the chart will create a secret
+# WARNING: prefer using existing secret in production
+telnyx:
+  apiKey: ""
+
+# Persistence for uploads
+persistence:
+  enabled: false
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClassName: ""
+  annotations: {}
+
+# Ngrok sidecar to make uploads publicly reachable
+ngrok:
+  enabled: false
+  image: ngrok/ngrok:latest
+  # Option 1: reference an existing secret
+  existingSecret:
+    name: ""
+    key: NGROK_AUTHTOKEN
+  # Option 2: provide the token value for a new secret (not recommended for prod)
+  authtoken: ""
+  # ngrok command args
+  command: ["http", "--log=stdout", "localhost:8080"]
+
+# Gateway API (HTTPRoute) support
+gateway:
+  enabled: false
+  hostnames: []
+  parentRefs:
+    - name: ""
+      namespace: ""
+  path: "/"
