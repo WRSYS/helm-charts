@@ -12,6 +12,9 @@ cloudflare:
   secret: ""
   # If defined, no secret is created for the credentials, and instead, the secret referenced is used
   secretName: null
+  # Specifies the protocol used to establish a connection between cloudflared and the Cloudflare global network. Available values are auto, http2, h2mux, and quic. (default: auto)
+  # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/
+  protocol: ""
   # If true, turn on WARP routing for TCP
   enableWarp: false
   # Define ingress rules for the tunnel. See
@@ -25,6 +28,8 @@ cloudflare:
     # in the connection from cloudflared to your local service, not from the internet to cloudflared.
     # - hostname: hello.example.com
     #   service: hello_world
+  # If true, enable the default 404 page. Needs to be false if you want to use a '*' wildcard rule.
+  enableDefault404: true
 
 image:
   repository: cloudflare/cloudflared
@@ -78,5 +83,25 @@ nodeSelector: {}
 
 tolerations: []
 
+topologySpreadConstraints: []
+
 # Default affinity is to spread out over nodes; use this to override.
 affinity: {}
+
+livenessProbe:
+  failureThreshold: 1
+
+serviceMonitor:
+  # -- Enable this if you're using https://github.com/coreos/prometheus-operator
+  enabled: false
+  # -- Interval at which endpoints should be scraped.
+  interval: 30s
+  # -- Add custom labels to the ServiceMonitor resource
+  additionalLabels: {}
+    # prometheus: kube-prometheus
+  # -- Chooses the metric’s labels on collisions with target labels.
+  honorLabels: false
+  # -- Path to scrape metrics
+  path: /metrics
+  # -- Timeout for scrape metrics request
+  scrapeTimeout: 10s

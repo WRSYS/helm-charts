@@ -14,6 +14,8 @@ data:
       enabled: {{ .Values.cloudflare.enableWarp }}
     # Serves the metrics server under /metrics and the readiness server under /ready
     metrics: 0.0.0.0:2000
+    # Specifies the protocol used to establish a connection between cloudflared and the Cloudflare global network
+    protocol: {{ default "auto" .Values.cloudflare.protocol }}
     # Autoupdates applied in a k8s pod will be lost when the pod is removed or restarted, so
     # autoupdate doesn't make sense in Kubernetes. However, outside of Kubernetes, we strongly
     # recommend using autoupdate.
@@ -25,5 +27,7 @@ data:
       {{- with .Values.cloudflare.ingress }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{ if .Values.cloudflare.enableDefault404 }}
       # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
       - service: http_status:404
+      {{ end }}
