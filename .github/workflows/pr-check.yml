@@ -113,8 +113,8 @@ jobs:
           for chart in $CHANGED_CHARTS; do
             echo "Updating version for chart: $chart"
             CHANGELOG_FILE="charts/$chart/CHANGELOG.md"
-            CURRENT_VERSION=$(grep -E '^version:' "charts/$chart/Chart.yaml" | awk '{print $2}')
-            NEW_VERSION=$(sed -nE 's/^##[[:space:]]*v?([0-9]+\.[0-9]+\.[0-9A-Za-z\.-]*).*/\1/p' "$CHANGELOG_FILE" | head -n1)
+            CURRENT_VERSION=$(sed -nE 's/^version:[[:space:]]*"?([^"[:space:]]+)"?.*/\1/p' "charts/$chart/Chart.yaml" | head -n1)
+            NEW_VERSION=$(sed -nE 's/^##[[:space:]]*\[?v?([0-9]+\.[0-9]+\.[0-9A-Za-z\.-]*)\]?.*/\1/p' "$CHANGELOG_FILE" | head -n1)
             if [ -z "${NEW_VERSION:-}" ]; then
               echo "ERROR: Could not parse version from $CHANGELOG_FILE"
               exit 1
