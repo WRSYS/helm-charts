@@ -1,8 +1,11 @@
 # Default values for fax-ui.
+fullnameOverride: ""
+
 image:
   repository: ghcr.io/wrsys/fax-ui
   tag: latest
   pullPolicy: IfNotPresent
+  pullSecrets: []
 
 service:
   type: ClusterIP
