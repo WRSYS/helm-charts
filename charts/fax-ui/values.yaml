@@ -1,6 +1,6 @@
 # Default values for fax-ui.
 image:
-  repository: fax-ui
+  repository: ghcr.io/wrsys/fax-ui
   tag: latest
   pullPolicy: IfNotPresent
 
