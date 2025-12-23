@@ -31,7 +31,11 @@ jobs:
           HEAD="${{ github.sha }}"
           CHANGED_DIRS=$(git diff --name-only "$BASE...$HEAD" \
             | awk -F/ 'NF>=2{print $1"/"$2}' | sort -u)
-          echo "changed_dirs=$CHANGED_DIRS" >> "$GITHUB_OUTPUT"
+          {
+            echo "changed_dirs<<EOF"
+            echo "$CHANGED_DIRS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Verify Changelog in Changed Charts
         if: contains(steps.changed-files.outputs.changed_dirs, 'charts/')
@@ -94,7 +98,11 @@ jobs:
           HEAD="${{ github.sha }}"
           CHANGED_CHARTS=$(git diff --name-only "$BASE...$HEAD" \
             | awk -F/ '/^charts\/[^/]+\/CHANGELOG\.md$/{print $2}' | sort -u)
-          echo "changed_charts=$CHANGED_CHARTS" >> "$GITHUB_OUTPUT"
+          {
+            echo "changed_charts<<EOF"
+            echo "$CHANGED_CHARTS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Update Chart Versions
         if: steps.changed-charts.outputs.changed_charts != ''
