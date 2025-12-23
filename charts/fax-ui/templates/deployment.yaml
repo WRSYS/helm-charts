@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fax-ui.fullname" . }}
+  labels:
+    {{- include "fax-ui.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "fax-ui.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "fax-ui.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.image.pullSecrets | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if or .Values.envSecret.name .Values.envSecret.create }}
+          envFrom:
+            - secretRef:
+                name: {{ if .Values.envSecret.name }}{{ .Values.envSecret.name }}{{ else }}{{ include "fax-ui.fullname" . }}-env{{ end }}
+          {{- end }}
+          env:
+            - name: TELNYX_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.existingTelnyxSecret.name }}{{ .Values.existingTelnyxSecret.name }}{{ else }}{{ include "fax-ui.fullname" . }}-telnyx{{ end }}
+                  key: {{ .Values.existingTelnyxSecret.key | default "TELNYX_API_KEY" }}
+            {{- if .Values.env.uploadsInMemory }}
+            - name: UPLOAD_IN_MEMORY
+              value: "true"
+            {{- end }}
+            {{- if .Values.env.hipaaMode }}
+            - name: HIPAA_MODE
+              value: "true"
+            {{- end }}
+            {{- if .Values.env.publicBaseURL }}
+            - name: PUBLIC_BASE_URL
+              value: {{ .Values.env.publicBaseURL | quote }}
+            {{- end }}
+            {{- if .Values.env.connectionID }}
+            - name: FAX_CONNECTION_ID
+              value: {{ .Values.env.connectionID | quote }}
+            {{- end }}
+            {{- if .Values.env.fromNumber }}
+            - name: FAX_FROM_DEFAULT
+              value: {{ .Values.env.fromNumber | quote }}
+            {{- end }}
+            {{- if .Values.ngrok.enabled }}
+            - name: NGROK_API_URL
+              value: "http://localhost:4040"
+            {{- end }}
+          args:
+            {{- if .Values.env.fromNumber }}
+            - "--from={{ .Values.env.fromNumber }}"
+            {{- end }}
+            {{- if .Values.env.connectionID }}
+            - "--connection_id={{ .Values.env.connectionID }}"
+            {{- end }}
+            {{- if .Values.env.uploadsInMemory }}
+            - "--upload_in_memory"
+            {{- end }}
+            {{- if .Values.env.hipaaMode }}
+            - "--hipaa"
+            {{- end }}
+            {{- if .Values.env.publicBaseURL }}
+            - "--public_base_url={{ .Values.env.publicBaseURL }}"
+            {{- end }}
+            {{- if .Values.env.uploadDir }}
+            - "--upload_dir={{ .Values.env.uploadDir }}"
+            {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: uploads
+              mountPath: {{ .Values.env.uploadDir | default "/app/uploads" | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.ngrok.enabled }}
+        - name: ngrok
+          image: {{ .Values.ngrok.image | default "ngrok/ngrok:latest" | quote }}
+          args: {{- if .Values.ngrok.command }} {{ toYaml .Values.ngrok.command | nindent 12 }} {{- else }}
+            - "http"
+            - "--log=stdout"
+            - "localhost:8080"
+            {{- end }}
+          env:
+            - name: NGROK_AUTHTOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.ngrok.existingSecret.name }}{{ .Values.ngrok.existingSecret.name }}{{ else }}{{ include "fax-ui.fullname" . }}-ngrok{{ end }}
+                  key: {{ .Values.ngrok.existingSecret.key | default "NGROK_AUTHTOKEN" }}
+        {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ include "fax-ui.fullname" . }}-uploads
+        {{- end }}

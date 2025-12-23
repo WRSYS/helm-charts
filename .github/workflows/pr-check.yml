@@ -1,0 +1,146 @@
+name: Check Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-changelog:
+    name: Check Changed Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get Changed File Directories
+        id: changed-files
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.sha }}"
+          CHANGED_DIRS=$(git diff --name-only "$BASE...$HEAD" \
+            | awk -F/ 'NF>=2{print $1"/"$2}' | sort -u)
+          {
+            echo "changed_dirs<<EOF"
+            echo "$CHANGED_DIRS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Verify Changelog in Changed Charts
+        if: contains(steps.changed-files.outputs.changed_dirs, 'charts/')
+        env:
+          CHANGED_DIRS: ${{ steps.changed-files.outputs.changed_dirs }}
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.sha }}"
+          for dir in $CHANGED_DIRS; do
+            [[ $dir == charts/* ]] || continue
+            chart_name="${dir##*/}"
+            if git diff --unified=0 "$BASE...$HEAD" -- "$dir/CHANGELOG.md" \
+                 | grep -qE '^\+##[[:space:]]'; then
+              echo "CHANGELOG.md updated for chart: $chart_name"
+            else
+              echo "ERROR: CHANGELOG.md not updated for changed chart: $chart_name"
+              exit 1
+            fi
+          done
+
+      - name: Verify Changelog Updated
+        if: contains(steps.changed-files.outputs.changed_dirs, 'charts/')
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.sha }}"
+          if git diff --unified=0 "$BASE...$HEAD" -- charts/*/CHANGELOG.md \
+               | grep -qE '^\+##[[:space:]]'; then
+            echo "Changelog files have been updated."
+          else
+            echo "ERROR: No changelog updates found in changed charts."
+            exit 1
+          fi
+  update-chart-version:
+    name: Update Chart Version
+    runs-on: ubuntu-latest
+    needs: check-changelog
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CHANGELOG_BOT_APP_ID }}
+          private-key: ${{ secrets.CHANGELOG_BOT_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout Code (with app token)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Determine Changed Charts
+        id: changed-charts
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.sha }}"
+          CHANGED_CHARTS=$(git diff --name-only "$BASE...$HEAD" \
+            | awk -F/ '/^charts\/[^/]+\/CHANGELOG\.md$/{print $2}' | sort -u)
+          {
+            echo "changed_charts<<EOF"
+            echo "$CHANGED_CHARTS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update Chart Versions
+        if: steps.changed-charts.outputs.changed_charts != ''
+        env:
+          CHANGED_CHARTS: ${{ steps.changed-charts.outputs.changed_charts }}
+        run: |
+          set -euo pipefail
+          for chart in $CHANGED_CHARTS; do
+            echo "Updating version for chart: $chart"
+            CHANGELOG_FILE="charts/$chart/CHANGELOG.md"
+            CURRENT_VERSION=$(sed -nE 's/^version:[[:space:]]*"?([^"[:space:]]+)"?.*/\1/p' "charts/$chart/Chart.yaml" | head -n1)
+            NEW_VERSION=$(sed -nE 's/^##[[:space:]]*\[?v?([0-9]+\.[0-9]+\.[0-9A-Za-z\.-]*)\]?.*/\1/p' "$CHANGELOG_FILE" | head -n1)
+            if [ -z "${NEW_VERSION:-}" ]; then
+              echo "ERROR: Could not parse version from $CHANGELOG_FILE"
+              exit 1
+            fi
+            if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+              echo "Updating $chart Chart.yaml from $CURRENT_VERSION to $NEW_VERSION"
+              sed -i.bak "s/^version: .*/version: $NEW_VERSION/" "charts/$chart/Chart.yaml"
+              rm "charts/$chart/Chart.yaml.bak"
+            else
+              echo "Chart $chart is already at version $NEW_VERSION"
+            fi
+          done
+
+      - name: Configure Git for Commit
+        run: |
+          set -euo pipefail
+          git config user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config user.email '${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+
+      - name: Commit Version Updates
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- charts/*/Chart.yaml; then
+            git add charts/*/Chart.yaml
+            git commit -m "chore: update chart version(s) based on CHANGELOG.md"
+            git push origin HEAD:${{ github.head_ref }}
+          else
+            echo "No Chart.yaml changes to commit."
+          fi

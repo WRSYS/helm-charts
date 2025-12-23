@@ -28,6 +28,18 @@
         "/^charts/meshcentral/Chart.ya?ml$/"
       ],
       "automerge": true
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/wrsys/fax-ui"
+      ],
+      "matchFileNames": [
+        "/^charts/fax-ui/Chart.ya?ml$/"
+      ],
+      "automerge": true
     }
   ]
 }
