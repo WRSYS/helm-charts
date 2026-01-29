@@ -37,6 +37,20 @@ affinity: {}
 
 replicaCount: 1
 
+# Security contexts for pod and container
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
 # App configuration
 env:
   hipaaMode: false
@@ -46,6 +60,29 @@ env:
   connectionID: ""
   fromNumber: ""
   uploadsInMemory: true
+  # Fax Application ID for settings management
+  faxApplicationId: ""
+
+# Authentication configuration
+auth:
+  # Simple password authentication
+  password: ""
+  # Session secret (required if password is set, auto-generated if empty)
+  sessionSecret: ""
+  # OAuth providers (optional)
+  google:
+    clientId: ""
+    clientSecret: ""
+  microsoft:
+    clientId: ""
+    clientSecret: ""
+  github:
+    clientId: ""
+    clientSecret: ""
+
+# Reference an existing auth secret instead of creating one
+existingAuthSecret:
+  name: ""
 
 # Optionally load app envs from a Secret
 envSecret:
