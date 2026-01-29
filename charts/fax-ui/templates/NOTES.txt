@@ -1,0 +1,53 @@
+Fax-UI has been deployed!
+
+Access the application via:
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
+{{- end }}
+{{- else if .Values.gateway.enabled }}
+{{- range .Values.gateway.hostnames }}
+  https://{{ . }}
+{{- end }}
+{{- else }}
+  kubectl port-forward svc/{{ include "fax-ui.fullname" . }} 8080:{{ .Values.service.port }}
+  Then visit: http://localhost:8080
+{{- end }}
+
+{{- if not .Values.existingTelnyxSecret.name }}
+{{- if not .Values.telnyx.apiKey }}
+
+⚠️  WARNING: No Telnyx API key configured!
+   Set telnyx.apiKey or existingTelnyxSecret.name to enable fax functionality.
+{{- end }}
+{{- end }}
+
+{{- if .Values.auth.password }}
+
+🔐 Authentication is enabled with password protection.
+{{- end }}
+
+{{- if or .Values.auth.google.clientId .Values.auth.microsoft.clientId .Values.auth.github.clientId }}
+
+🔐 OAuth authentication is enabled for:
+{{- if .Values.auth.google.clientId }}
+   - Google
+{{- end }}
+{{- if .Values.auth.microsoft.clientId }}
+   - Microsoft
+{{- end }}
+{{- if .Values.auth.github.clientId }}
+   - GitHub
+{{- end }}
+{{- end }}
+
+{{- if .Values.ngrok.enabled }}
+
+🌐 Ngrok sidecar is enabled for public URL exposure.
+   The app will automatically detect the ngrok public URL.
+{{- end }}
+
+{{- if .Values.env.hipaaMode }}
+
+🏥 HIPAA mode is enabled. Media and preview storage is disabled.
+{{- end }}
