@@ -61,10 +61,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.existingTelnyxSecret.name | default (printf "%s-telnyx" (include "fax-ui.fullname" .)) }}
                   key: {{ .Values.existingTelnyxSecret.key | default "TELNYX_API_KEY" }}
-            {{- if .Values.env.uploadsInMemory }}
-            - name: UPLOAD_IN_MEMORY
-              value: "true"
-            {{- end }}
             {{- if .Values.env.hipaaMode }}
             - name: HIPAA_MODE
               value: "true"
@@ -81,7 +77,7 @@ spec:
             - name: FAX_FROM_DEFAULT
               value: {{ .Values.env.fromNumber | quote }}
             {{- end }}
-            {{- if .Values.env.uploadDir }}
+            {{- if and .Values.env.uploadDir (not .Values.env.hipaaMode) }}
             - name: UPLOAD_DIR
               value: {{ .Values.env.uploadDir | quote }}
             {{- end }}

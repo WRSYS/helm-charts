@@ -55,11 +55,12 @@ securityContext:
 env:
   hipaaMode: false
   publicBaseURL: ""
+  # Directory for persistent uploads (non-HIPAA mode only)
+  # If empty or hipaaMode=true, uses in-memory storage with auto-cleanup
   uploadDir: "/app/uploads"
   # If set, passed as flags; otherwise inputs remain visible in UI
   connectionID: ""
   fromNumber: ""
-  uploadsInMemory: true
   # Fax Application ID for settings management
   faxApplicationId: ""
 
@@ -94,7 +95,6 @@ envSecret:
     PUBLIC_BASE_URL: ""
     FAX_CONNECTION_ID: ""
     FAX_FROM_DEFAULT: ""
-    UPLOAD_IN_MEMORY: ""
 
 # Telnyx API key handling
 # Option 1: reference an existing secret name/key
@@ -106,7 +106,8 @@ existingTelnyxSecret:
 telnyx:
   apiKey: ""
 
-# Persistence for uploads
+# Persistence for uploads (non-HIPAA mode only)
+# When hipaaMode=true, persistence is ignored and in-memory storage is used
 persistence:
   enabled: false
   accessModes:
