@@ -244,37 +244,6 @@ entries:
     urls:
     - https://wrsys.github.io/helm-charts/cloudflare-tunnel-remote-0.1.0.tgz
     version: 0.1.0
-  fax-ui:
-  - apiVersion: v2
-    appVersion: 1.1.0
-    created: "2026-01-29T21:42:25.645843281Z"
-    description: Telnyx Fax UI wrapper (Go) with optional ngrok sidecar
-    digest: 42f725689916615c335957ced6220eaad188dde609bbfcb5eaef5295bb79bcd9
-    keywords:
-    - telnyx
-    - fax
-    - go
-    - web
-    - ngrok
-    name: fax-ui
-    urls:
-    - https://wrsys.github.io/helm-charts/fax-ui-0.2.0.tgz
-    version: 0.2.0
-  - apiVersion: v2
-    appVersion: 1.0.0
-    created: "2026-01-29T21:42:25.645372785Z"
-    description: Telnyx Fax UI wrapper (Go) with optional ngrok sidecar
-    digest: 08db49e885e45ec48459d5c4f82b55e399aaffbdfb93d4cd6c74a126a15b0c9d
-    keywords:
-    - telnyx
-    - fax
-    - go
-    - web
-    - ngrok
-    name: fax-ui
-    urls:
-    - https://wrsys.github.io/helm-charts/fax-ui-0.1.0.tgz
-    version: 0.1.0
   meshcentral:
   - apiVersion: v2
     appVersion: 1.1.50
