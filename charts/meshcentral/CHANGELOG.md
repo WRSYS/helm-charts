@@ -1,4 +1,8 @@
 # Changelog
+## [0.10.0]
+### Changed
+- Bump MeshCentral to 1.1.56
+
 ## [0.9.0]
 ### Changed
 - Bump MeshCentral to 1.1.50
