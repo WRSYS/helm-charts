@@ -3,6 +3,18 @@
   "extends": [
     "config:recommended"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update meshcentral appVersion",
+      "managerFilePatterns": ["charts/meshcentral/Chart.yaml"],
+      "matchStrings": [
+        "appVersion:\\s+\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "ghcr.io/ylianst/meshcentral",
+      "datasourceTemplate": "docker"
+    }
+  ],
   "packageRules": [
     {
       "matchDatasources": [
@@ -24,10 +36,16 @@
       "matchPackageNames": [
         "ghcr.io/ylianst/meshcentral"
       ],
-      "matchFileNames": [
-        "/^charts/meshcentral/Chart.ya?ml$/"
-      ],
-      "automerge": true
+      "groupName": "ghcr.io/ylianst/meshcentral updates",
+      "automerge": true,
+      "bumpVersions": [
+        {
+          "name": "Chart",
+          "filePatterns": ["charts/meshcentral/Chart.yaml"],
+          "matchStrings": ["version:\\s+(?<version>\\d+\\.\\d+\\.\\d+)"],
+          "bumpType": "minor"
+        }
+      ]
     },
     {
       "matchDatasources": [
