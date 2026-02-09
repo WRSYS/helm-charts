@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "gitIgnoredAuthors": ["changelog-bot-wrsys[bot]@users.noreply.github.com"],
   "customManagers": [
     {
       "customType": "regex",
