@@ -25,7 +25,7 @@
         "ghcr.io/ylianst/meshcentral"
       ],
       "matchFileNames": [
-        "/^charts/meshcentral/Chart.ya?ml$/"
+        "/^charts/meshcentral/(Chart|values).ya?ml$/"
       ],
       "automerge": true
     },
