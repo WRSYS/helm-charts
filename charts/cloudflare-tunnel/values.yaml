@@ -35,7 +35,7 @@ image:
   repository: cloudflare/cloudflared
   pullPolicy: IfNotPresent
   # If supplied, this overrides "appVersion"
-  tag: ""
+  tag: "2025.8.1"
 
 replicaCount: 2
 
@@ -64,7 +64,7 @@ securityContext:
   allowPrivilegeEscalation: false
   capabilities:
     drop:
-    - ALL
+      - ALL
   readOnlyRootFilesystem: true
 
 resources: {}

@@ -3,7 +3,7 @@ fullnameOverride: ""
 
 image:
   repository: ghcr.io/wrsys/fax-ui
-  tag: latest
+  tag: "0.1.0"
   pullPolicy: IfNotPresent
   pullSecrets: []
 

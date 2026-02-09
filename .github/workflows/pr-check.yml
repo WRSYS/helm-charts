@@ -123,7 +123,10 @@ jobs:
               meshcentral)
                 PACKAGE_NAME="MeshCentral"
                 ;;
-              cloudflare-tunnel|cloudflare-tunnel-remote)
+              cloudflare-tunnel)
+                PACKAGE_NAME="cloudflared"
+                ;;
+              cloudflare-tunnel-remote)
                 PACKAGE_NAME="cloudflared"
                 ;;
               fax-ui)

@@ -7,12 +7,42 @@
   "customManagers": [
     {
       "customType": "regex",
+      "description": "Update cloudflare-tunnel appVersion",
+      "managerFilePatterns": ["charts/cloudflare-tunnel/Chart.yaml"],
+      "matchStrings": [
+        "appVersion:\\s+\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "cloudflare/cloudflared",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Update cloudflare-tunnel-remote appVersion",
+      "managerFilePatterns": ["charts/cloudflare-tunnel-remote/Chart.yaml"],
+      "matchStrings": [
+        "appVersion:\\s+\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "cloudflare/cloudflared",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "description": "Update meshcentral appVersion",
       "managerFilePatterns": ["charts/meshcentral/Chart.yaml"],
       "matchStrings": [
         "appVersion:\\s+\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "ghcr.io/ylianst/meshcentral",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Update fax-ui appVersion",
+      "managerFilePatterns": ["charts/fax-ui/Chart.yaml"],
+      "matchStrings": [
+        "appVersion:\\s+\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "ghcr.io/wrsys/fax-ui",
       "datasourceTemplate": "docker"
     }
   ],
@@ -24,11 +54,16 @@
       "matchPackageNames": [
         "cloudflare/cloudflared"
       ],
-      "matchFileNames": [
-        "/^charts/cloudflare-tunnel/Chart.ya?ml$/",
-        "/^charts/cloudflare-tunnel-remote/Chart.ya?ml$/"
-      ],
-      "automerge": true
+      "groupName": "cloudflare/cloudflared updates",
+      "automerge": true,
+      "bumpVersions": [
+        {
+          "name": "Chart",
+          "filePatterns": ["charts/cloudflare-tunnel/Chart.yaml", "charts/cloudflare-tunnel-remote/Chart.yaml"],
+          "matchStrings": ["version:\\s+(?<version>\\d+\\.\\d+\\.\\d+)"],
+          "bumpType": "minor"
+        }
+      ]
     },
     {
       "matchDatasources": [
@@ -55,10 +90,16 @@
       "matchPackageNames": [
         "ghcr.io/wrsys/fax-ui"
       ],
-      "matchFileNames": [
-        "/^charts/fax-ui/Chart.ya?ml$/"
-      ],
-      "automerge": true
+      "groupName": "ghcr.io/wrsys/fax-ui updates",
+      "automerge": true,
+      "bumpVersions": [
+        {
+          "name": "Chart",
+          "filePatterns": ["charts/fax-ui/Chart.yaml"],
+          "matchStrings": ["version:\\s+(?<version>\\d+\\.\\d+\\.\\d+)"],
+          "bumpType": "minor"
+        }
+      ]
     }
   ]
 }
