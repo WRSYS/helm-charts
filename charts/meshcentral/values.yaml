@@ -1,7 +1,7 @@
 meshcentral:
   image:
     repository: ghcr.io/ylianst/meshcentral
-    tag: "1.1.56"
+    tag: "1.1.57"
     pullPolicy: IfNotPresent
 
   databaseType: none # Options: none, mariadb, mysql, postgres, sqlite3, acebase
