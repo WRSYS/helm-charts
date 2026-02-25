@@ -23,9 +23,8 @@ jobs:
         with:
           version: v3.14.0
 
-      - name: Install git-cliff
-        run: |
-          curl -sSLf https://github.com/orhun/git-cliff/releases/download/v0.13.0/git-cliff-0.13.0-x86_64-unknown-linux-gnu.tar.gz | tar xz -C /usr/local/bin
+      - name: Set up git-cliff
+        uses: kenji-miyake/setup-git-cliff@v1
 
       - name: Determine Changed Charts
         id: changed-charts
