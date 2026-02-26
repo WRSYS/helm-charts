@@ -35,7 +35,7 @@ image:
   repository: cloudflare/cloudflared
   pullPolicy: IfNotPresent
   # If supplied, this overrides "appVersion"
-  tag: "2025.8.1"
+  tag: "2025.11.1"
 
 replicaCount: 2
 
