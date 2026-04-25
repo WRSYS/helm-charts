@@ -16,7 +16,9 @@ spec:
       annotations:
         # These are here so the deployment rolls when the config or secret change.
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if not .Values.cloudflare.credentialsVolume }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -69,8 +71,12 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: creds
+          {{- if .Values.cloudflare.credentialsVolume }}
+          {{- toYaml .Values.cloudflare.credentialsVolume | nindent 10 }}
+          {{- else }}
           secret:
             secretName: {{ .Values.cloudflare.secretName | default (include "cloudflare-tunnel.fullname" .) }}
+          {{- end }}
         - name: config
           configMap:
             name: {{ include "cloudflare-tunnel.fullname" . }}
