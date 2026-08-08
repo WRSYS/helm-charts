@@ -26,6 +26,7 @@ The following table lists the configurable parameters of the Cloudflare Tunnel c
 | `cloudflare.tunnelId`             | The ID of the above tunnel                       | `""`                           |
 | `cloudflare.secret`               | The secret for the tunnel                        | `""`                           |
 | `cloudflare.secretName`           | The secret name for the credentials              | `null`                         |
+| `cloudflare.credentialsVolume`    | Override the creds volume source entirely        | `null`                         |
 | `cloudflare.enableWarp`           | Enable WARP routing for TCP                      | `false`                        |
 | `cloudflare.ingress`              | Ingress rules for the tunnel                     | `[]`                           |
 | `image.repository`                | Image repository                                 | `cloudflare/cloudflared`       |
@@ -54,6 +55,13 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 ```sh
 helm install my-release wrsys/cloudflare-tunnel -f values.yaml
 ```
+
+## Credentials
+
+The chart supports inline secret creation, an external Secret reference, and a fully custom volume
+source (CSI drivers, projected volumes, sidecar injectors, and more).
+
+See [docs/credentials.md](./docs/credentials.md) for all credential modes and examples.
 
 ## Uninstallation
 
